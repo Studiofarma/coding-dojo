@@ -26,6 +26,32 @@ def test_fizz_buzz(value: int, expected: str) -> None:
     assert fizz_buzz(value) == expected
 
 
+@pytest.mark.parametrize(
+    "value,expected",
+    [
+        (0, "*"),
+        (1, ""),
+        (2, ""),
+        (10, "*"),
+        (100, "**"),
+    ],
+)
+def test_contains_asterisk(value: int, expected: str):
+    assert AsteriskConversion().convert(value) == expected
+
+
+def fizz_buzz(x: int) -> str:
+    conversions_rules = [
+        ContainsConversion("3", "Fizz"),
+        DivisibileByConversion(3, "Fizz"),
+        DivisibileByConversion(5, "Buzz"),
+        DivisibileByConversion(7, "Banana"),
+    ]
+
+    fizzbuzz = FizzBuzz(conversions_rules)
+    return fizzbuzz.run(x)
+
+
 class ConversionRule(ABC):
 
     @abstractmethod
@@ -55,7 +81,7 @@ class ContainsConversion(ConversionRule):
         return ""
 
 
-class ContainsAsterisk(ConversionRule):
+class AsteriskConversion(ConversionRule):
     def convert(self, value: int) -> str:
         return contains_asterisk(value)
 
@@ -75,33 +101,12 @@ class FizzBuzz:
         return return_string
 
 
-def fizz_buzz(x: int) -> str:
-    conversions_rules = [
-        ContainsConversion("3", "Fizz"),
-        DivisibileByConversion(3, "Fizz"),
-        DivisibileByConversion(5, "Buzz"),
-        DivisibileByConversion(7, "Banana"),
-        ContainsAsterisk(),
-    ]
-
-    fizzbuzz = FizzBuzz(conversions_rules)
-    return fizzbuzz.run(x)
-
-
 def contains(value: int, check_value: str):
     return check_value in str(value)
 
 
 def is_divisible_by(value: int, divisor: int) -> bool:
     return value % divisor == 0
-
-
-def test_contains_asterisk():
-    assert ContainsAsterisk().convert(0) == "*"
-    assert ContainsAsterisk().convert(1) == ""
-    assert ContainsAsterisk().convert(2) == ""
-    assert ContainsAsterisk().convert(10) == "*"
-    assert ContainsAsterisk().convert(100) == "**"
 
 
 def contains_asterisk(value: int) -> str:
